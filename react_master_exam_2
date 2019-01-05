@@ -1,0 +1,33 @@
+// Tip. setState의 null을 대입하면, update를 하지 않는다.
+
+import React, {Component} from 'react';
+
+
+const PizzaEat = (state, props) => {
+    const {pizzas} = state;
+    if(pizzas < 20) {
+      return {
+        pizzas: pizzas + 1
+      }
+    }
+    else {
+      return null;
+    }
+}
+
+class App extends Component{
+  state = {
+    pizzas:0
+  }
+  render = () => {
+    const {pizzas} = this.state;
+    return (
+      <button onClick={this._handleClick}>{`Pizza eaten: ${pizzas} ${pizzas <= 1 ? "pizza" : "pizzas"}`}</button>
+    );
+  }
+  _handleClick = () => {
+    this.setState(PizzaEat);
+  }
+}
+
+export default App;

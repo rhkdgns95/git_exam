@@ -1,0 +1,61 @@
+import React, {Component, Fragment} from 'react';
+import { createPortal } from "react-dom";
+
+const ReturnType = () => "Hello";
+const Message = () => " this is append by portal";
+const Portal = () => createPortal(<Message/>, document.getElementById('touch_me'));
+
+class ErrorMaker extends Component{
+    state ={
+        friends: ['Minji', "Jisu", "Yelly", "Jusan"]
+    }
+    componentDidMount = () => {
+        setTimeout(() => {
+            this.setState({
+                friends:undefined
+            })
+        }, 2000)
+    }
+    render =() => {
+        const {friends} = this.state;
+        return friends.map(friend => friend);
+    }
+}
+const ErrorFallback = () => `Sorry, something went wrong`;
+
+const BoundaryHOC = ProtectedComponent => 
+    class Boundary extends Component{
+        state = {
+            hasError:false
+        }
+        componentDidCatch = () => {
+            this.setState({
+                hasError:true
+            })
+        }
+        render = () => {
+            const {hasError} = this.state
+            if(hasError){
+                return <ErrorFallback/>
+            } else {
+                return <ProtectedComponent />
+            }
+        }
+    }
+const PErrorMaker = BoundaryHOC(ErrorMaker);
+const PReturnType = BoundaryHOC(ReturnType);
+const PPortal = BoundaryHOC(Portal);
+
+class App extends Component{
+    render = () =>{
+        return (
+            <Fragment>
+                <PReturnType/>
+                <PPortal/>
+                <PErrorMaker/>
+            </Fragment>
+        )
+    }
+}
+
+export default BoundaryHOC(App);
