@@ -1,0 +1,9 @@
+type Movie {
+    title: String!
+    id: Int!
+    summary: String!
+    rating: Float!
+}
+type Query { 
+    movies(id: Int): [Movie]! 
+}
