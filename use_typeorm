@@ -1,0 +1,28 @@
+import { ConnectionOptions } from "typeorm";
+const connectionOptions: ConnectionOptions = {
+	type: 'postgres',
+	database: 'nuber',
+	logging: true,
+	synchronzie: true,
+	entities: ['entities/**/*.*'],
+	host: process.env.DB_ENDPOINT,
+	username: process.env.DB_USERNAME,
+	password: process.env.DB_PASSWORD
+}
+export default connectionOptions;
+
+// index.ts
+import * as dotenv from "dotenv"
+dotenv.config();
+import { createConnection } from "typeorm";
+import connectionOptions from "./ormConfig";
+
+createConnection(connectionOptions).then(() => {
+	app.start(appOptions, () => console.log("GraphQLServer Running"));
+}).catch(err => console.log(err));
+
+// .env
+DB_ENDPOINT=localhost
+DB_USERNAME=postgres
+DB_PASSWORD=********
+
