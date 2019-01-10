@@ -1,0 +1,74 @@
+import React, {Component} from 'react';
+import styled, {ThemeProvider, css, keyframes} from "styled-components";
+import { theme } from "./movie";
+
+class App extends Component {
+  render = () => {
+    return(
+      <ThemeProvider theme={theme}>
+        <Card />
+      </ThemeProvider>
+    )
+  }
+}
+
+let Card = () => {
+  return (
+      <Container>
+        <Button success>success</Button>
+        <Button failed>failed</Button>
+        <Anchor href="https://www.naver.com">naver</Anchor>
+        <Input/>
+      </Container>
+  )
+};
+let Container = styled.div`
+  background-color:${prop => prop.theme.mainColor};
+  width:400px;
+  height:700px;
+  margin:0 auto;
+`;
+
+let Button = styled.button`
+  background-color:${prop => {
+    const {theme} = prop;
+    return (prop.failed ? theme.failedColor : theme.successColor);
+  }};
+  color:white;
+  width:100px;
+  display:block;
+  margin:0 auto;
+  ${prop => {
+    if(prop.failed)
+      return css`animation: ${rotate} 2s ease-in-out 3s infinite;`;
+  } }
+`;
+
+let Anchor = styled(Button.withComponent('a'))`
+  text-decoration:none;
+  text-align:center;
+`
+
+let Input = styled.input.attrs({
+  isRequired:true,
+  placeholder:"input your title"
+})`
+  background-color:black;
+  color:white;
+  text-align:center;
+  margin:0 auto;
+  display:block;
+  width:100px;
+`;
+
+let rotate = keyframes`
+  from{
+    background-color:gold;
+    transform: rotate(0deg);
+  }
+  to {
+    background-color:brown;
+    transform: rotate(360deg);
+  }
+`
+export default App;
