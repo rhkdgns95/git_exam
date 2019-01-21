@@ -1,0 +1,43 @@
+// Args. firstName, lastName, age, email, password, profilePhoto, phoneNumber 7개
+// 1. email이 존재하는 유저가 DB에 존재하는지 확인 (존재한다면 리턴)
+// 2. 존재하지 않는경우, 새로운 유저를 생성하여 저장한뒤 리턴함.
+
+import { EmailSignUpResponse, EmailSignUpMutationArgs } from "../../../types/graph";
+import { Resolvers } from "../../../types/resolvers";
+import createJWT from "../../../utils/createJWT";
+import User from "../../../entities/User";
+
+const resolvers: Resolvers = {
+	Mutation: {
+		EmailSignUp: async (_, args: EmailSignUpMutationArgs): Promise<EmailSignUpResponse> => {
+			const { email } = args;
+			try {
+				const existEmail = await User.fineOne({ email });
+				if(existEmail){
+					return {
+						ok: false,
+						error: "You should log in Email",
+						token: null
+					};
+				} else {
+					const user = await User.create({ ...args }).save();
+					const token = createJWT(user.id);
+					return {
+						ok: true,
+						error: null,
+						token
+					};
+				}	
+			} catch(error){
+				return {
+					ok: false,
+					error: null,
+					token: null
+				};
+			}
+
+		}
+	}
+}
+
+export default resolvers;
